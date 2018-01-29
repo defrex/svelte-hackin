@@ -1,0 +1,21 @@
+<header class='mdl-layout__header mdl-color--purple-500 mdl-color-text--white'>
+  <div
+    aria-expanded='false'
+    role='button'
+    tabindex='0'
+    on:click='store.set({ layout: { drawerOpen: !$layout.drawerOpen } })'
+    class='mdl-layout__drawer-button'
+  >
+    <i class='material-icons'></i>
+  </div>
+  <div class='mdl-layout__header-row'>
+    <span class='mdl-layout-title'>{{ page }}</span>
+    <div class='mdl-layout-spacer'></div>
+  </div>
+</header>
+
+<style>
+header {
+  position: fixed;
+}
+</style>

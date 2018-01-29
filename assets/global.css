@@ -1,0 +1,12 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  min-height: 100vh;
+}

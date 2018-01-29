@@ -1,0 +1,96 @@
+<:Head>
+  <title>Sapper project template</title>
+</:Head>
+
+<Layout page='Channels'>
+  <form
+    on:submit='handleNameSubmit(event, name)'
+    class="mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--12-col card"
+  >
+    <div class='mdl-textfield mdl-textfield--floating-label is-dirty'>
+      <input
+        class='mdl-textfield__input'
+        id='name'
+        type='text'
+        bind:value='name'
+        placeholder="Name"
+      >
+      <label class="mdl-textfield__label" for="name">Your Name</label>
+    </div>
+    <button type='submit' class='mdl-button mdl-js-button mdl-button--icon'>
+      <i class='material-icons'>save</i>
+    </button>
+  </form>
+
+  <form
+    on:submit='handleChannelSubmit(event, newChannelName)'
+    class="mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--12-col card"
+  >
+    <div class='mdl-textfield mdl-textfield--floating-label is-dirty'>
+      <input
+        class='mdl-textfield__input'
+        id='newChannel'
+        type='text'
+        bind:value='newChannelName'
+      >
+      <label class="mdl-textfield__label" for="newChannel">New Channel</label>
+    </div>
+    <button type='submit' class='mdl-button mdl-js-button mdl-button--icon'>
+      <i class='material-icons'>add_circle</i>
+    </button>
+  </form>
+</Layout>
+
+<style>
+
+.card {
+  border-radius: 2px;
+  padding: 16px 16px 0;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+</style>
+
+<script>
+import { goto } from 'sapper/runtime'
+
+import Layout from './_components/Layout.html'
+import store from '../store'
+
+export default {
+  store: () => store,
+  components: { Layout },
+
+  oncreate () {
+    this.store.initialize()
+    this.set({
+      newChannelName: '',
+      createdChannelName: null,
+      name: this.store.get('name'),
+    })
+
+    this.store.observe('channels', (channels) => {
+      const { createdChannelName } = this.get() || {}
+      if (createdChannelName && channels.includes(createdChannelName)) {
+        goto(`/channels/${createdChannelName}`)
+      }
+    })
+  },
+
+  methods: {
+    handleChannelSubmit (event, newChannelName) {
+      event.preventDefault()
+      this.store.createChannel(newChannelName)
+      this.set({ newChannelName: '', createdChannelName: newChannelName })
+    },
+    handleNameSubmit (event, name) {
+      event.preventDefault()
+      this.store.setName(name)
+    },
+  },
+}
+</script>

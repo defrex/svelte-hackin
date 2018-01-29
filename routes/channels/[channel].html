@@ -1,0 +1,110 @@
+<:Head>
+  <title>Sapper project template</title>
+</:Head>
+
+<Layout page='{{channel}}'>
+  <div class='content mdl-cell mdl-cell--12-col'>
+    {{#if $messages}}
+      {{#each $messages as message}}
+        <div class='message mdl-card mdl-shadow--2dp'>
+          <div class='author mdl-color-text--grey-600'>{{message.name}}</div>
+          {{message.message}}
+        </div>
+      {{/each}}
+    {{/if}}
+    <form
+      on:submit='handleSubmit(event, message)'
+      action='#'
+      class='mdl-card mdl-shadow--2dp'
+    >
+      <div class='mdl-textfield'>
+        <input
+          class='mdl-textfield__input'
+          type='text'
+          id='message'
+          bind:value='message'
+          placeholder="Message"
+        >
+      </div>
+      <button type='submit' class='mdl-button mdl-js-button mdl-button--icon'>
+        <i class='material-icons'>send</i>
+      </button>
+    </form>
+  </div>
+</Layout>
+
+<style>
+.content {
+  padding-bottom: 76px;
+}
+
+.mdl-card {
+  min-height: auto;
+}
+
+.message {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.author {
+  font-size: 12px;
+}
+
+form {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 16px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.mdl-textfield {
+  flex-grow: 1;
+}
+
+</style>
+
+<script>
+import Layout from '../_components/Layout.html'
+import store from '../../store'
+
+export default {
+  store: () => store,
+  components: { Layout },
+
+  preload ({ params }) {
+    const { channel } = params
+    return { channel }
+  },
+
+  async oncreate () {
+    const { channel } = this.get()
+
+    await this.store.initialize()
+    this.store.subscribe(channel)
+    this.set({ message: '' })
+
+    this.store.onchange((state, changed) => {
+      if (changed.messages) {
+        setTimeout(
+          () => window.scrollTo(0, document.body.scrollHeight),
+          10,
+        )
+      }
+    })
+    window.scrollTo(0, document.body.scrollHeight)
+  },
+
+  methods: {
+    handleSubmit (event, message) {
+      event.preventDefault()
+      this.store.sendMessage(message)
+      this.set({ message: '' })
+    },
+  },
+}
+</script>

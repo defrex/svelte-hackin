@@ -1,0 +1,37 @@
+<div class="mdl-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+  <Drawer page={{page}}/>
+  <Header page={{page}}/>
+
+  <main class="mdl-layout__content mdl-color--grey-100 ml-grid">
+    <div
+      class="mdl-layout__obfuscator {{ $layout.drawerOpen ? 'is-visible' : '' }}"
+      on:click='store.set({ layout: { drawerOpen: false } })'
+    />
+    <slot></slot>
+  </main>
+</div>
+
+<style>
+main {
+  min-height: 100vh;
+  padding-top: 56px;
+}
+
+@media screen and (min-width: 1025px) {
+  .mdl-layout__obfuscator {
+    display: none;
+  }
+}
+</style>
+
+<script>
+import Header from './Header.html'
+import Drawer from './Drawer.html'
+
+export default {
+  components: {
+    Header,
+    Drawer,
+  },
+}
+</script>

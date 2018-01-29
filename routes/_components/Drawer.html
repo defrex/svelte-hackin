@@ -1,0 +1,23 @@
+<div class='mdl-layout__drawer {{ $layout.drawerOpen ? 'is-visible' : '' }}'>
+  <span class='mdl-layout-title'>{{page}}</span>
+  <nav class='mdl-navigation'>
+    <a
+      class='mdl-navigation__link'
+      href='/'
+      on:click='store.set({ layout: { drawerOpen: false } })'
+    >Home</a>
+    {{#each $channels as channel}}
+      <a
+        class='mdl-navigation__link'
+        href='/channels/{{channel}}'
+        on:click='store.set({ layout: { drawerOpen: false } })'
+      >{{channel}}</a>
+    {{/each}}
+  </nav>
+</div>
+
+<style>
+.mdl-layout__drawer {
+  position: fixed;
+}
+</style>
